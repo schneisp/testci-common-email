@@ -1,0 +1,116 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DataSourceResolver</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.apache.commons.mail</a>
+</div>
+
+<h1>Coverage Summary for Class: DataSourceResolver (org.apache.commons.mail)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">DataSourceResolver</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * Licensed to the Apache Software Foundation (ASF) under one or more
+&nbsp; * contributor license agreements.  See the NOTICE file distributed with
+&nbsp; * this work for additional information regarding copyright ownership.
+&nbsp; * The ASF licenses this file to You under the Apache License, Version 2.0
+&nbsp; * (the &quot;License&quot;); you may not use this file except in compliance with
+&nbsp; * the License.  You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *     http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; */
+&nbsp;package org.apache.commons.mail;
+&nbsp;
+&nbsp;import javax.activation.DataSource;
+&nbsp;import java.io.IOException;
+&nbsp;
+&nbsp;/**
+&nbsp; * Creates a &lt;code&gt;DataSource&lt;/code&gt; based on an URL.
+&nbsp; *
+&nbsp; * @since 1.3
+&nbsp; * @version $Id: DataSourceResolver.java 1420381 2012-12-11 20:18:05Z tn $
+&nbsp; */
+&nbsp;public interface DataSourceResolver
+&nbsp;{
+&nbsp;    /**
+&nbsp;     * Resolves the given resource location to a &lt;code&gt;DataSource&lt;/code&gt;.
+&nbsp;     *
+&nbsp;     * @param resourceLocation the location of the resource
+&nbsp;     * @return the &lt;code&gt;DataSource&lt;/code&gt;
+&nbsp;     * @throws IOException the resource was not found
+&nbsp;     */
+&nbsp;    DataSource resolve(final String resourceLocation) throws IOException;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resolves the given resource location to a &lt;code&gt;DataSource&lt;/code&gt;.
+&nbsp;     *
+&nbsp;     * @param resourceLocation the location of the resource
+&nbsp;     * @param isLenient shall we ignore resources not found or complain with an exception?
+&nbsp;     * @return the data source containing the resource or null if the resource was not found in lenient mode
+&nbsp;     * @throws IOException resolving the resource failed
+&nbsp;     */
+&nbsp;    DataSource resolve(final String resourceLocation, final boolean isLenient)
+&nbsp;        throws IOException;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-16 18:32</div>
+</div>
+</body>
+</html>

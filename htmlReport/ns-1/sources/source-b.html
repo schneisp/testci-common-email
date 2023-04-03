@@ -1,0 +1,306 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > EmailConstants</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.apache.commons.mail</a>
+</div>
+
+<h1>Coverage Summary for Class: EmailConstants (org.apache.commons.mail)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">EmailConstants</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * Licensed to the Apache Software Foundation (ASF) under one or more
+&nbsp; * contributor license agreements.  See the NOTICE file distributed with
+&nbsp; * this work for additional information regarding copyright ownership.
+&nbsp; * The ASF licenses this file to You under the Apache License, Version 2.0
+&nbsp; * (the &quot;License&quot;); you may not use this file except in compliance with
+&nbsp; * the License.  You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *     http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; */
+&nbsp;package org.apache.commons.mail;
+&nbsp;
+&nbsp;/**
+&nbsp; * Constants used by Email classes.
+&nbsp; *
+&nbsp; * A description of the mail session parameter you find at
+&nbsp; * &lt;a href=&quot;http://java.sun.com/products/javamail/javadocs/com/sun/mail/smtp/package-summary.html&quot;&gt;
+&nbsp; * http://java.sun.com/products/javamail/javadocs/com/sun/mail/smtp/package-summary.html&lt;/a&gt;.
+&nbsp; *
+&nbsp; * @since 1.3
+&nbsp; * @version $Id: EmailConstants.java 1532531 2013-10-15 21:13:11Z tn $
+&nbsp; */
+&nbsp;public final class EmailConstants
+&nbsp;{
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String SENDER_EMAIL = &quot;sender.email&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String SENDER_NAME = &quot;sender.name&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String RECEIVER_EMAIL = &quot;receiver.email&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    public static final String RECEIVER_NAME = &quot;receiver.name&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String EMAIL_SUBJECT = &quot;email.subject&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String EMAIL_BODY = &quot;email.body&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String CONTENT_TYPE = &quot;content.type&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String ATTACHMENTS = &quot;attachments&quot;;
+&nbsp;
+&nbsp;    /** @deprecated since 1.3, not in use since 1.0 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String FILE_SERVER = &quot;file.server&quot;;
+&nbsp;
+&nbsp;    // Charset constants
+&nbsp;
+&nbsp;    /** charset constant for koi8-r */
+&nbsp;    public static final String KOI8_R = &quot;koi8-r&quot;;
+&nbsp;
+&nbsp;    /** charset constant for iso-8859-1 */
+&nbsp;    public static final String ISO_8859_1 = &quot;iso-8859-1&quot;;
+&nbsp;
+&nbsp;    /** charset constant for us-ascii */
+&nbsp;    public static final String US_ASCII = &quot;us-ascii&quot;;
+&nbsp;
+&nbsp;    /** charset constant for utf-8 */
+&nbsp;    public static final String UTF_8 = &quot;utf-8&quot;;
+&nbsp;
+&nbsp;    /** The debug mode to be used. */
+&nbsp;    public static final String MAIL_DEBUG = &quot;mail.debug&quot;;
+&nbsp;
+&nbsp;    /** The host name of the mail server. */
+&nbsp;    public static final String MAIL_HOST = &quot;mail.smtp.host&quot;;
+&nbsp;
+&nbsp;    /** The port number of the mail server. */
+&nbsp;    public static final String MAIL_PORT = &quot;mail.smtp.port&quot;;
+&nbsp;
+&nbsp;    /** The email address to use for SMTP MAIL command. */
+&nbsp;    public static final String MAIL_SMTP_FROM = &quot;mail.smtp.from&quot;;
+&nbsp;
+&nbsp;    /** If set to true, tries to authenticate the user using the AUTH command. */
+&nbsp;    public static final String MAIL_SMTP_AUTH = &quot;mail.smtp.auth&quot;;
+&nbsp;
+&nbsp;    /** The SMTP user name. */
+&nbsp;    public static final String MAIL_SMTP_USER = &quot;mail.smtp.user&quot;;
+&nbsp;
+&nbsp;    /** The SMTP password. */
+&nbsp;    public static final String MAIL_SMTP_PASSWORD = &quot;mail.smtp.password&quot;;
+&nbsp;
+&nbsp;    /** Specifies the default transport protocol */
+&nbsp;    public static final String MAIL_TRANSPORT_PROTOCOL = &quot;mail.transport.protocol&quot;;
+&nbsp;
+&nbsp;    /** the value to use SMTP as transport protocol */
+&nbsp;    public static final String SMTP = &quot;smtp&quot;;
+&nbsp;
+&nbsp;    /** defines the text/html content type */
+&nbsp;    public static final String TEXT_HTML = &quot;text/html&quot;;
+&nbsp;
+&nbsp;    /** defines the html subtype */
+&nbsp;    public static final String TEXT_SUBTYPE_HTML = &quot;html&quot;;
+&nbsp;
+&nbsp;    /** defines the text/plain content type */
+&nbsp;    public static final String TEXT_PLAIN = &quot;text/plain&quot;;
+&nbsp;
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;    // since 1.1
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;
+&nbsp;    /** @deprecated since 1.3 */
+&nbsp;    @Deprecated
+&nbsp;    public static final String MAIL_TRANSPORT_TLS = &quot;mail.smtp.starttls.enable&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Indicates if the STARTTLS command shall be used to initiate a TLS-secured connection.
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public static final String MAIL_TRANSPORT_STARTTLS_ENABLE = &quot;mail.smtp.starttls.enable&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Whether to use {@link java.net.Socket} as a fallback if the initial connection fails or not.
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SOCKET_FACTORY_FALLBACK = &quot;mail.smtp.socketFactory.fallback&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Specifies the {@link javax.net.SocketFactory} class to create smtp sockets.
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SOCKET_FACTORY_CLASS = &quot;mail.smtp.socketFactory.class&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Specifies the port to connect to when using a socket factory.
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SOCKET_FACTORY_PORT = &quot;mail.smtp.socketFactory.port&quot;;
+&nbsp;
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;    // since 1.2
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Socket connection timeout value in milliseconds. Default is infinite timeout.
+&nbsp;     * @since 1.2
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_CONNECTIONTIMEOUT = &quot;mail.smtp.connectiontimeout&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Socket I/O timeout value in milliseconds. Default is infinite timeout.
+&nbsp;     * @since 1.2
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_TIMEOUT = &quot;mail.smtp.timeout&quot;;
+&nbsp;
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;    // since 1.3
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Default socket timeout.
+&nbsp;     * @since 1.3
+&nbsp;     */
+&nbsp;    public static final int SOCKET_TIMEOUT_MS = 60000;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If true, requires the use of the STARTTLS command. If the server doesn&#39;t support
+&nbsp;     * the STARTTLS command, the connection will fail.
+&nbsp;     * @since 1.3
+&nbsp;     */
+&nbsp;    public static final String MAIL_TRANSPORT_STARTTLS_REQUIRED = &quot;mail.smtp.starttls.required&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If set to true, use SSL to connect and use the SSL port by default.
+&nbsp;     * @since 1.3
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SSL_ENABLE = &quot;mail.smtp.ssl.enable&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If set to true, check the server identity as specified in RFC 2595.
+&nbsp;     * @since 1.3
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SSL_CHECKSERVERIDENTITY = &quot;mail.smtp.ssl.checkserveridentity&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Specifies the {@link javax.net.ssl.SSLSocketFactory} class to use to create SMTP SSL sockets.
+&nbsp;     * @since 1.3
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SSL_SOCKET_FACTORY_CLASS = &quot;mail.smtp.ssl.socketFactory.class&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Specifies the port to connect to when using the SMTP SSL socket factory.
+&nbsp;     * @since 1.3
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SSL_SOCKET_FACTORY_PORT = &quot;mail.smtp.ssl.socketFactory.port&quot;;
+&nbsp;
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;    // since 1.3.2
+&nbsp;    /////////////////////////////////////////////////////////////////////////
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If set to true, and a message has some valid and some invalid addresses, send the message anyway,
+&nbsp;     * reporting the partial failure with a SendFailedException.
+&nbsp;     * If set to false (the default), the message is not sent to any of the recipients
+&nbsp;     * if there is an invalid recipient address.
+&nbsp;     * @since 1.3.2
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTP_SEND_PARTIAL = &quot;mail.smtp.sendpartial&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If set to true, and a message has some valid and some invalid addresses, send the message anyway,
+&nbsp;     * reporting the partial failure with a SendFailedException.
+&nbsp;     * If set to false (the default), the message is not sent to any of the recipients
+&nbsp;     * if there is an invalid recipient address.
+&nbsp;     * @since 1.3.2
+&nbsp;     */
+&nbsp;    public static final String MAIL_SMTPS_SEND_PARTIAL = &quot;mail.smtps.sendpartial&quot;;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Defines the default mime charset to use when none has been specified for the message.
+&nbsp;     * @since 1.3.2
+&nbsp;     */
+&nbsp;    public static final String MAIL_MIME_CHARSET = &quot;mail.mime.charset&quot;;
+&nbsp;
+&nbsp;    /** Hide constructor. */
+&nbsp;    private EmailConstants()
+&nbsp;    {
+&nbsp;        // do nothing
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-16 18:32</div>
+</div>
+</body>
+</html>

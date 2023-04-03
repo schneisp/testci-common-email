@@ -1,0 +1,686 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > MultiPartEmail</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.apache.commons.mail</a>
+</div>
+
+<h1>Coverage Summary for Class: MultiPartEmail (org.apache.commons.mail)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MultiPartEmail</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/23)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/122)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * Licensed to the Apache Software Foundation (ASF) under one or more
+&nbsp; * contributor license agreements.  See the NOTICE file distributed with
+&nbsp; * this work for additional information regarding copyright ownership.
+&nbsp; * The ASF licenses this file to You under the Apache License, Version 2.0
+&nbsp; * (the &quot;License&quot;); you may not use this file except in compliance with
+&nbsp; * the License.  You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *     http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; */
+&nbsp;package org.apache.commons.mail;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.net.URL;
+&nbsp;
+&nbsp;import javax.activation.DataHandler;
+&nbsp;import javax.activation.DataSource;
+&nbsp;import javax.activation.FileDataSource;
+&nbsp;import javax.activation.URLDataSource;
+&nbsp;import javax.mail.BodyPart;
+&nbsp;import javax.mail.MessagingException;
+&nbsp;import javax.mail.internet.MimeBodyPart;
+&nbsp;import javax.mail.internet.MimeMultipart;
+&nbsp;import javax.mail.internet.MimePart;
+&nbsp;
+&nbsp;/**
+&nbsp; * A multipart email.
+&nbsp; *
+&nbsp; * &lt;p&gt;This class is used to send multi-part internet email like
+&nbsp; * messages with attachments.
+&nbsp; *
+&nbsp; * &lt;p&gt;To create a multi-part email, call the default constructor and
+&nbsp; * then you can call setMsg() to set the message and call the
+&nbsp; * different attach() methods.
+&nbsp; *
+&nbsp; * @since 1.0
+&nbsp; * @version $Id: MultiPartEmail.java 1510643 2013-08-05 18:23:25Z britter $
+&nbsp; */
+<b class="nc">&nbsp;public class MultiPartEmail extends Email</b>
+&nbsp;{
+&nbsp;    /** Body portion of the email. */
+&nbsp;    private MimeMultipart container;
+&nbsp;
+&nbsp;    /** The message container. */
+&nbsp;    private BodyPart primaryBodyPart;
+&nbsp;
+&nbsp;    /** The MIME subtype. */
+&nbsp;    private String subType;
+&nbsp;
+&nbsp;    /** Indicates if the message has been initialized. */
+&nbsp;    private boolean initialized;
+&nbsp;
+&nbsp;    /** Indicates if attachments have been added to the message. */
+&nbsp;    private boolean boolHasAttachments;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Set the MIME subtype of the email.
+&nbsp;     *
+&nbsp;     * @param aSubType MIME subtype of the email
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public void setSubType(String aSubType)
+&nbsp;    {
+<b class="nc">&nbsp;        this.subType = aSubType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get the MIME subtype of the email.
+&nbsp;     *
+&nbsp;     * @return MIME subtype of the email
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public String getSubType()
+&nbsp;    {
+<b class="nc">&nbsp;        return subType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add a new part to the email.
+&nbsp;     *
+&nbsp;     * @param partContent The content.
+&nbsp;     * @param partContentType The content type.
+&nbsp;     * @return An Email.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public Email addPart(String partContent, String partContentType)
+&nbsp;        throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;            BodyPart bodyPart = createBodyPart();</b>
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            bodyPart.setContent(partContent, partContentType);</b>
+<b class="nc">&nbsp;            getContainer().addBodyPart(bodyPart);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add a new part to the email.
+&nbsp;     *
+&nbsp;     * @param multipart The MimeMultipart.
+&nbsp;     * @return An Email.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     *  @since 1.0
+&nbsp;     */
+&nbsp;    public Email addPart(MimeMultipart multipart) throws EmailException
+&nbsp;    {
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            return addPart(multipart, getContainer().getCount());</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Add a new part to the email.
+&nbsp;     *
+&nbsp;     * @param multipart The part to add.
+&nbsp;     * @param index The index to add at.
+&nbsp;     * @return The email.
+&nbsp;     * @throws EmailException An error occurred while adding the part.
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public Email addPart(MimeMultipart multipart, int index) throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;            BodyPart bodyPart = createBodyPart();</b>
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            bodyPart.setContent(multipart);</b>
+<b class="nc">&nbsp;            getContainer().addBodyPart(bodyPart, index);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Initialize the multipart email.
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    protected void init()
+&nbsp;    {
+<b class="nc">&nbsp;        if (initialized)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new IllegalStateException(&quot;Already initialized&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        container = createMimeMultipart();</b>
+<b class="nc">&nbsp;        super.setContent(container);</b>
+&nbsp;
+<b class="nc">&nbsp;        initialized = true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Set the message of the email.
+&nbsp;     *
+&nbsp;     * @param msg A String.
+&nbsp;     * @return An Email.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public Email setMsg(String msg) throws EmailException
+&nbsp;    {
+&nbsp;        // throw exception on null message
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(msg))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid message supplied&quot;);</b>
+&nbsp;        }
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            BodyPart primary = getPrimaryBodyPart();</b>
+&nbsp;
+<b class="nc">&nbsp;            if ((primary instanceof MimePart) &amp;&amp; EmailUtils.isNotEmpty(charset))</b>
+&nbsp;            {
+<b class="nc">&nbsp;                ((MimePart) primary).setText(msg, charset);</b>
+&nbsp;            }
+&nbsp;            else
+&nbsp;            {
+<b class="nc">&nbsp;                primary.setText(msg);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Does the work of actually building the MimeMessage. Please note that
+&nbsp;     * a user rarely calls this method directly and only if he/she is
+&nbsp;     * interested in the sending the underlying MimeMessage without
+&nbsp;     * commons-email.
+&nbsp;     *
+&nbsp;     * @exception EmailException if there was an error.
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void buildMimeMessage() throws EmailException
+&nbsp;    {
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            if (primaryBodyPart != null)</b>
+&nbsp;            {
+&nbsp;                // before a multipart message can be sent, we must make sure that
+&nbsp;                // the content for the main body part was actually set.  If not,
+&nbsp;                // an IOException will be thrown during super.send().
+&nbsp;
+<b class="nc">&nbsp;                BodyPart body = this.getPrimaryBodyPart();</b>
+&nbsp;                try
+&nbsp;                {
+<b class="nc">&nbsp;                    body.getContent();</b>
+&nbsp;                }
+<b class="nc">&nbsp;                catch (IOException e) // NOPMD</b>
+&nbsp;                {
+&nbsp;                    // do nothing here.
+&nbsp;                    // content will be set to an empty string as a result.
+&nbsp;                    // (Should this really be rethrown as an email exception?)
+&nbsp;                    // throw new EmailException(e);
+<b class="nc">&nbsp;                }</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (subType != null)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                getContainer().setSubType(subType);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            super.buildMimeMessage();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attach a file.
+&nbsp;     *
+&nbsp;     * @param file A file attachment
+&nbsp;     * @return A MultiPartEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.3
+&nbsp;     */
+&nbsp;    public MultiPartEmail attach(File file)
+&nbsp;        throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        String fileName = file.getAbsolutePath();</b>
+&nbsp;
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            if (!file.exists())</b>
+&nbsp;            {
+<b class="nc">&nbsp;                throw new IOException(&quot;\&quot;&quot; + fileName + &quot;\&quot; does not exist&quot;);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            FileDataSource fds = new FileDataSource(file);</b>
+&nbsp;
+<b class="nc">&nbsp;            return attach(fds, file.getName(), null, EmailAttachment.ATTACHMENT);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (IOException e)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Cannot attach file \&quot;&quot; + fileName + &quot;\&quot;&quot;, e);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attach an EmailAttachment.
+&nbsp;     *
+&nbsp;     * @param attachment An EmailAttachment.
+&nbsp;     * @return A MultiPartEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public MultiPartEmail attach(EmailAttachment attachment)
+&nbsp;        throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        MultiPartEmail result = null;</b>
+&nbsp;
+<b class="nc">&nbsp;        if (attachment == null)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid attachment supplied&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        URL url = attachment.getURL();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (url == null)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            String fileName = null;</b>
+&nbsp;            try
+&nbsp;            {
+<b class="nc">&nbsp;                fileName = attachment.getPath();</b>
+<b class="nc">&nbsp;                File file = new File(fileName);</b>
+<b class="nc">&nbsp;                if (!file.exists())</b>
+&nbsp;                {
+<b class="nc">&nbsp;                    throw new IOException(&quot;\&quot;&quot; + fileName + &quot;\&quot; does not exist&quot;);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                result =</b>
+<b class="nc">&nbsp;                    attach(</b>
+&nbsp;                        new FileDataSource(file),
+<b class="nc">&nbsp;                        attachment.getName(),</b>
+<b class="nc">&nbsp;                        attachment.getDescription(),</b>
+<b class="nc">&nbsp;                        attachment.getDisposition());</b>
+&nbsp;            }
+<b class="nc">&nbsp;            catch (IOException e)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                throw new EmailException(&quot;Cannot attach file \&quot;&quot; + fileName + &quot;\&quot;&quot;, e);</b>
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;        else
+&nbsp;        {
+<b class="nc">&nbsp;            result =</b>
+<b class="nc">&nbsp;                attach(</b>
+&nbsp;                    url,
+<b class="nc">&nbsp;                    attachment.getName(),</b>
+<b class="nc">&nbsp;                    attachment.getDescription(),</b>
+<b class="nc">&nbsp;                    attachment.getDisposition());</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attach a file located by its URL.  The disposition of the file
+&nbsp;     * is set to mixed.
+&nbsp;     *
+&nbsp;     * @param url The URL of the file (may be any valid URL).
+&nbsp;     * @param name The name field for the attachment.
+&nbsp;     * @param description A description for the attachment.
+&nbsp;     * @return A MultiPartEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public MultiPartEmail attach(URL url, String name, String description)
+&nbsp;        throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        return attach(url, name, description, EmailAttachment.ATTACHMENT);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attach a file located by its URL.
+&nbsp;     *
+&nbsp;     * @param url The URL of the file (may be any valid URL).
+&nbsp;     * @param name The name field for the attachment.
+&nbsp;     * @param description A description for the attachment.
+&nbsp;     * @param disposition Either mixed or inline.
+&nbsp;     * @return A MultiPartEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public MultiPartEmail attach(
+&nbsp;        URL url,
+&nbsp;        String name,
+&nbsp;        String description,
+&nbsp;        String disposition)
+&nbsp;        throws EmailException
+&nbsp;    {
+&nbsp;        // verify that the URL is valid
+&nbsp;       try
+&nbsp;       {
+<b class="nc">&nbsp;           InputStream is = url.openStream();</b>
+<b class="nc">&nbsp;           is.close();</b>
+&nbsp;       }
+<b class="nc">&nbsp;       catch (IOException e)</b>
+&nbsp;       {
+<b class="nc">&nbsp;           throw new EmailException(&quot;Invalid URL set:&quot; + url, e);</b>
+<b class="nc">&nbsp;       }</b>
+&nbsp;
+<b class="nc">&nbsp;       return attach(new URLDataSource(url), name, description, disposition);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attach a file specified as a DataSource interface.
+&nbsp;     *
+&nbsp;     * @param ds A DataSource interface for the file.
+&nbsp;     * @param name The name field for the attachment.
+&nbsp;     * @param description A description for the attachment.
+&nbsp;     * @return A MultiPartEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public MultiPartEmail attach(
+&nbsp;        DataSource ds,
+&nbsp;        String name,
+&nbsp;        String description)
+&nbsp;        throws EmailException
+&nbsp;    {
+&nbsp;        // verify that the DataSource is valid
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            final InputStream is = (ds != null) ? ds.getInputStream() : null;</b>
+<b class="nc">&nbsp;            if (is != null)</b>
+&nbsp;            {
+&nbsp;                // close the input stream to prevent file locking on windows
+<b class="nc">&nbsp;                is.close();</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (is == null)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                throw new EmailException(&quot;Invalid Datasource&quot;);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        catch (IOException e)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid Datasource&quot;, e);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        return attach(ds, name, description, EmailAttachment.ATTACHMENT);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attach a file specified as a DataSource interface.
+&nbsp;     *
+&nbsp;     * @param ds A DataSource interface for the file.
+&nbsp;     * @param name The name field for the attachment.
+&nbsp;     * @param description A description for the attachment.
+&nbsp;     * @param disposition Either mixed or inline.
+&nbsp;     * @return A MultiPartEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public MultiPartEmail attach(
+&nbsp;        DataSource ds,
+&nbsp;        String name,
+&nbsp;        String description,
+&nbsp;        String disposition)
+&nbsp;        throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(name))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            name = ds.getName();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        BodyPart bodyPart = createBodyPart();</b>
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            getContainer().addBodyPart(bodyPart);</b>
+&nbsp;
+<b class="nc">&nbsp;            bodyPart.setDisposition(disposition);</b>
+<b class="nc">&nbsp;            bodyPart.setFileName(name);</b>
+<b class="nc">&nbsp;            bodyPart.setDescription(description);</b>
+<b class="nc">&nbsp;            bodyPart.setDataHandler(new DataHandler(ds));</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        setBoolHasAttachments(true);</b>
+&nbsp;
+<b class="nc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets first body part of the message.
+&nbsp;     *
+&nbsp;     * @return The primary body part.
+&nbsp;     * @throws MessagingException An error occurred while getting the primary body part.
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    protected BodyPart getPrimaryBodyPart() throws MessagingException
+&nbsp;    {
+<b class="nc">&nbsp;        if (!initialized)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            init();</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Add the first body part to the message.  The fist body part must be
+<b class="nc">&nbsp;        if (this.primaryBodyPart == null)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            primaryBodyPart = createBodyPart();</b>
+<b class="nc">&nbsp;            getContainer().addBodyPart(primaryBodyPart, 0);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return primaryBodyPart;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the message container.
+&nbsp;     *
+&nbsp;     * @return The message container.
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    protected MimeMultipart getContainer()
+&nbsp;    {
+<b class="nc">&nbsp;        if (!initialized)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            init();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return container;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a body part object.
+&nbsp;     * Can be overridden if you don&#39;t want to create a BodyPart.
+&nbsp;     *
+&nbsp;     * @return the created body part
+&nbsp;     */
+&nbsp;    protected BodyPart createBodyPart()
+&nbsp;    {
+<b class="nc">&nbsp;        return new MimeBodyPart();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Creates a mime multipart object.
+&nbsp;     *
+&nbsp;     * @return the created mime part
+&nbsp;     */
+&nbsp;    protected MimeMultipart createMimeMultipart()
+&nbsp;    {
+<b class="nc">&nbsp;        return new MimeMultipart();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks whether there are attachments.
+&nbsp;     *
+&nbsp;     * @return true if there are attachments
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public boolean isBoolHasAttachments()
+&nbsp;    {
+<b class="nc">&nbsp;        return boolHasAttachments;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets whether there are attachments.
+&nbsp;     *
+&nbsp;     * @param b  the attachments flag
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public void setBoolHasAttachments(boolean b)
+&nbsp;    {
+<b class="nc">&nbsp;        boolHasAttachments = b;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Checks if this object is initialized.
+&nbsp;     *
+&nbsp;     * @return true if initialized
+&nbsp;     */
+&nbsp;    protected boolean isInitialized()
+&nbsp;    {
+<b class="nc">&nbsp;        return initialized;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Sets the initialized status of this object.
+&nbsp;     *
+&nbsp;     * @param b  the initialized status flag
+&nbsp;     */
+&nbsp;    protected void setInitialized(boolean b)
+&nbsp;    {
+<b class="nc">&nbsp;        initialized = b;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-16 18:32</div>
+</div>
+</body>
+</html>

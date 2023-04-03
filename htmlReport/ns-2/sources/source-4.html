@@ -1,0 +1,215 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DataSourceFileResolver</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.apache.commons.mail.resolver</a>
+</div>
+
+<h1>Coverage Summary for Class: DataSourceFileResolver (org.apache.commons.mail.resolver)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DataSourceFileResolver</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * Licensed to the Apache Software Foundation (ASF) under one or more
+&nbsp; * contributor license agreements.  See the NOTICE file distributed with
+&nbsp; * this work for additional information regarding copyright ownership.
+&nbsp; * The ASF licenses this file to You under the Apache License, Version 2.0
+&nbsp; * (the &quot;License&quot;); you may not use this file except in compliance with
+&nbsp; * the License.  You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *     http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; */
+&nbsp;package org.apache.commons.mail.resolver;
+&nbsp;
+&nbsp;import javax.activation.DataSource;
+&nbsp;import javax.activation.FileDataSource;
+&nbsp;import java.io.File;
+&nbsp;import java.io.IOException;
+&nbsp;
+&nbsp;/**
+&nbsp; * Creates a &lt;code&gt;DataSource&lt;/code&gt; based on an URL. The implementation
+&nbsp; * also resolves file resources.
+&nbsp; *
+&nbsp; * @since 1.3
+&nbsp; * @version $Id: DataSourceFileResolver.java 1420381 2012-12-11 20:18:05Z tn $
+&nbsp; */
+&nbsp;public class DataSourceFileResolver extends DataSourceBaseResolver
+&nbsp;{
+&nbsp;    /** the base directory of the resource when resolving relative paths */
+&nbsp;    private final File baseDir;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     */
+&nbsp;    public DataSourceFileResolver()
+<b class="nc">&nbsp;    {</b>
+<b class="nc">&nbsp;        baseDir = new File(&quot;.&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param baseDir the base directory of the resource when resolving relative paths
+&nbsp;     */
+&nbsp;    public DataSourceFileResolver(final File baseDir)
+<b class="nc">&nbsp;    {</b>
+<b class="nc">&nbsp;        this.baseDir = baseDir;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor.
+&nbsp;     *
+&nbsp;     * @param baseDir the base directory of the resource when resolving relative paths
+&nbsp;     * @param lenient shall we ignore resources not found or complain with an exception
+&nbsp;     */
+&nbsp;    public DataSourceFileResolver(final File baseDir, final boolean lenient)
+&nbsp;    {
+<b class="nc">&nbsp;        super(lenient);</b>
+<b class="nc">&nbsp;        this.baseDir = baseDir;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Get the base directory used for resolving relative resource locations.
+&nbsp;     *
+&nbsp;     * @return the baseUrl
+&nbsp;     */
+&nbsp;    public File getBaseDir()
+&nbsp;    {
+<b class="nc">&nbsp;        return baseDir;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** {@inheritDoc} */
+&nbsp;    public DataSource resolve(final String resourceLocation) throws IOException
+&nbsp;    {
+<b class="nc">&nbsp;        return resolve(resourceLocation, isLenient());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /** {@inheritDoc} */
+&nbsp;    public DataSource resolve(final String resourceLocation, final boolean isLenient) throws IOException
+&nbsp;    {
+&nbsp;        File file;
+<b class="nc">&nbsp;        DataSource result = null;</b>
+&nbsp;
+<b class="nc">&nbsp;        if (!isCid(resourceLocation))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            file = new File(resourceLocation);</b>
+&nbsp;
+<b class="nc">&nbsp;            if (!file.isAbsolute())</b>
+&nbsp;            {
+<b class="nc">&nbsp;                file = getBaseDir() != null ? new File(getBaseDir(), resourceLocation) : new File(resourceLocation);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (file.exists())</b>
+&nbsp;            {
+<b class="nc">&nbsp;                result = new FileDataSource(file);</b>
+&nbsp;            }
+&nbsp;            else
+&nbsp;            {
+<b class="nc">&nbsp;                if (!isLenient)</b>
+&nbsp;                {
+<b class="nc">&nbsp;                    throw new IOException(&quot;Cant resolve the following file resource :&quot; + file.getAbsolutePath());</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return result;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-16 18:32</div>
+</div>
+</body>
+</html>

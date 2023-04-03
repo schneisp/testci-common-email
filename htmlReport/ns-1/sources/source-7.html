@@ -1,0 +1,820 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > HtmlEmail</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.apache.commons.mail</a>
+</div>
+
+<h1>Coverage Summary for Class: HtmlEmail (org.apache.commons.mail)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HtmlEmail</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/135)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">HtmlEmail$InlineImage</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/149)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;/*
+&nbsp; * Licensed to the Apache Software Foundation (ASF) under one or more
+&nbsp; * contributor license agreements.  See the NOTICE file distributed with
+&nbsp; * this work for additional information regarding copyright ownership.
+&nbsp; * The ASF licenses this file to You under the Apache License, Version 2.0
+&nbsp; * (the &quot;License&quot;); you may not use this file except in compliance with
+&nbsp; * the License.  You may obtain a copy of the License at
+&nbsp; *
+&nbsp; *     http://www.apache.org/licenses/LICENSE-2.0
+&nbsp; *
+&nbsp; * Unless required by applicable law or agreed to in writing, software
+&nbsp; * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+&nbsp; * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+&nbsp; * See the License for the specific language governing permissions and
+&nbsp; * limitations under the License.
+&nbsp; */
+&nbsp;package org.apache.commons.mail;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.io.IOException;
+&nbsp;import java.io.InputStream;
+&nbsp;import java.io.UnsupportedEncodingException;
+&nbsp;import java.net.MalformedURLException;
+&nbsp;import java.net.URL;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Locale;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;import javax.activation.DataHandler;
+&nbsp;import javax.activation.DataSource;
+&nbsp;import javax.activation.FileDataSource;
+&nbsp;import javax.activation.URLDataSource;
+&nbsp;import javax.mail.BodyPart;
+&nbsp;import javax.mail.MessagingException;
+&nbsp;import javax.mail.internet.MimeBodyPart;
+&nbsp;import javax.mail.internet.MimeMultipart;
+&nbsp;
+&nbsp;/**
+&nbsp; * An HTML multipart email.
+&nbsp; *
+&nbsp; * &lt;p&gt;This class is used to send HTML formatted email.  A text message
+&nbsp; * can also be set for HTML unaware email clients, such as text-based
+&nbsp; * email clients.
+&nbsp; *
+&nbsp; * &lt;p&gt;This class also inherits from {@link MultiPartEmail}, so it is easy to
+&nbsp; * add attachments to the email.
+&nbsp; *
+&nbsp; * &lt;p&gt;To send an email in HTML, one should create a &lt;code&gt;HtmlEmail&lt;/code&gt;, then
+&nbsp; * use the {@link #setFrom(String)}, {@link #addTo(String)} etc. methods.
+&nbsp; * The HTML content can be set with the {@link #setHtmlMsg(String)} method. The
+&nbsp; * alternative text content can be set with {@link #setTextMsg(String)}.
+&nbsp; *
+&nbsp; * &lt;p&gt;Either the text or HTML can be omitted, in which case the &quot;main&quot;
+&nbsp; * part of the multipart becomes whichever is supplied rather than a
+&nbsp; * &lt;code&gt;multipart/alternative&lt;/code&gt;.
+&nbsp; *
+&nbsp; * &lt;h3&gt;Embedding Images and Media&lt;/h3&gt;
+&nbsp; *
+&nbsp; * &lt;p&gt;It is also possible to embed URLs, files, or arbitrary
+&nbsp; * &lt;code&gt;DataSource&lt;/code&gt;s directly into the body of the mail:
+&nbsp; * &lt;pre&gt;&lt;code&gt;
+&nbsp; * HtmlEmail he = new HtmlEmail();
+&nbsp; * File img = new File(&quot;my/image.gif&quot;);
+&nbsp; * PNGDataSource png = new PNGDataSource(decodedPNGOutputStream); // a custom class
+&nbsp; * StringBuffer msg = new StringBuffer();
+&nbsp; * msg.append(&quot;&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&quot;);
+&nbsp; * msg.append(&quot;&amp;lt;img src=cid:&quot;).append(he.embed(img)).append(&quot;&amp;gt;&quot;);
+&nbsp; * msg.append(&quot;&amp;lt;img src=cid:&quot;).append(he.embed(png)).append(&quot;&amp;gt;&quot;);
+&nbsp; * msg.append(&quot;&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;&quot;);
+&nbsp; * he.setHtmlMsg(msg.toString());
+&nbsp; * // code to set the other email fields (not shown)
+&nbsp; * &lt;/pre&gt;&lt;/code&gt;
+&nbsp; *
+&nbsp; * &lt;p&gt;Embedded entities are tracked by their name, which for &lt;code&gt;File&lt;/code&gt;s is
+&nbsp; * the filename itself and for &lt;code&gt;URL&lt;/code&gt;s is the canonical path. It is
+&nbsp; * an error to bind the same name to more than one entity, and this class will
+&nbsp; * attempt to validate that for &lt;code&gt;File&lt;/code&gt;s and &lt;code&gt;URL&lt;/code&gt;s. When
+&nbsp; * embedding a &lt;code&gt;DataSource&lt;/code&gt;, the code uses the &lt;code&gt;equals()&lt;/code&gt;
+&nbsp; * method defined on the &lt;code&gt;DataSource&lt;/code&gt;s to make the determination.
+&nbsp; *
+&nbsp; * @since 1.0
+&nbsp; * @version $Id: HtmlEmail.java 1532531 2013-10-15 21:13:11Z tn $
+&nbsp; */
+<b class="nc">&nbsp;public class HtmlEmail extends MultiPartEmail</b>
+&nbsp;{
+&nbsp;    /** Definition of the length of generated CID&#39;s. */
+&nbsp;    public static final int CID_LENGTH = 10;
+&nbsp;
+&nbsp;    /** prefix for default HTML mail. */
+&nbsp;    private static final String HTML_MESSAGE_START = &quot;&lt;html&gt;&lt;body&gt;&lt;pre&gt;&quot;;
+&nbsp;    /** suffix for default HTML mail. */
+&nbsp;    private static final String HTML_MESSAGE_END = &quot;&lt;/pre&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Text part of the message. This will be used as alternative text if
+&nbsp;     * the email client does not support HTML messages.
+&nbsp;     */
+&nbsp;    protected String text;
+&nbsp;
+&nbsp;    /** Html part of the message. */
+&nbsp;    protected String html;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @deprecated As of commons-email 1.1, no longer used. Inline embedded
+&nbsp;     * objects are now stored in {@link #inlineEmbeds}.
+&nbsp;     */
+&nbsp;    @Deprecated
+&nbsp;    protected List&lt;InlineImage&gt; inlineImages;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Embedded images Map&lt;String, InlineImage&gt; where the key is the
+&nbsp;     * user-defined image name.
+&nbsp;     */
+<b class="nc">&nbsp;    protected Map&lt;String, InlineImage&gt; inlineEmbeds = new HashMap&lt;String, InlineImage&gt;();</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Set the text content.
+&nbsp;     *
+&nbsp;     * @param aText A String.
+&nbsp;     * @return An HtmlEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public HtmlEmail setTextMsg(String aText) throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(aText))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid message supplied&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        this.text = aText;</b>
+<b class="nc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Set the HTML content.
+&nbsp;     *
+&nbsp;     * @param aHtml A String.
+&nbsp;     * @return An HtmlEmail.
+&nbsp;     * @throws EmailException see javax.mail.internet.MimeBodyPart
+&nbsp;     *  for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public HtmlEmail setHtmlMsg(String aHtml) throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(aHtml))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid message supplied&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        this.html = aHtml;</b>
+<b class="nc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Set the message.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;This method overrides {@link MultiPartEmail#setMsg(String)} in
+&nbsp;     * order to send an HTML message instead of a plain text message in
+&nbsp;     * the mail body. The message is formatted in HTML for the HTML
+&nbsp;     * part of the message; it is left as is in the alternate text
+&nbsp;     * part.
+&nbsp;     *
+&nbsp;     * @param msg the message text to use
+&nbsp;     * @return this &lt;code&gt;HtmlEmail&lt;/code&gt;
+&nbsp;     * @throws EmailException if msg is null or empty;
+&nbsp;     * see javax.mail.internet.MimeBodyPart for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public Email setMsg(String msg) throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(msg))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid message supplied&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        setTextMsg(msg);</b>
+&nbsp;
+<b class="nc">&nbsp;        StringBuffer htmlMsgBuf = new StringBuffer(</b>
+<b class="nc">&nbsp;            msg.length()</b>
+<b class="nc">&nbsp;            + HTML_MESSAGE_START.length()</b>
+<b class="nc">&nbsp;            + HTML_MESSAGE_END.length()</b>
+&nbsp;        );
+&nbsp;
+<b class="nc">&nbsp;        htmlMsgBuf.append(HTML_MESSAGE_START)</b>
+<b class="nc">&nbsp;            .append(msg)</b>
+<b class="nc">&nbsp;            .append(HTML_MESSAGE_END);</b>
+&nbsp;
+<b class="nc">&nbsp;        setHtmlMsg(htmlMsgBuf.toString());</b>
+&nbsp;
+<b class="nc">&nbsp;        return this;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Attempts to parse the specified &lt;code&gt;String&lt;/code&gt; as a URL that will
+&nbsp;     * then be embedded in the message.
+&nbsp;     *
+&nbsp;     * @param urlString String representation of the URL.
+&nbsp;     * @param name The name that will be set in the filename header field.
+&nbsp;     * @return A String with the Content-ID of the URL.
+&nbsp;     * @throws EmailException when URL supplied is invalid or if {@code name} is null
+&nbsp;     * or empty; also see {@link javax.mail.internet.MimeBodyPart} for definitions
+&nbsp;     *
+&nbsp;     * @see #embed(URL, String)
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public String embed(String urlString, String name) throws EmailException
+&nbsp;    {
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            return embed(new URL(urlString), name);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MalformedURLException e)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid URL&quot;, e);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Embeds an URL in the HTML.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;This method embeds a file located by an URL into
+&nbsp;     * the mail body. It allows, for instance, to add inline images
+&nbsp;     * to the email.  Inline files may be referenced with a
+&nbsp;     * &lt;code&gt;cid:xxxxxx&lt;/code&gt; URL, where xxxxxx is the Content-ID
+&nbsp;     * returned by the embed function. It is an error to bind the same name
+&nbsp;     * to more than one URL; if the same URL is embedded multiple times, the
+&nbsp;     * same Content-ID is guaranteed to be returned.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;While functionally the same as passing &lt;code&gt;URLDataSource&lt;/code&gt; to
+&nbsp;     * {@link #embed(DataSource, String, String)}, this method attempts
+&nbsp;     * to validate the URL before embedding it in the message and will throw
+&nbsp;     * &lt;code&gt;EmailException&lt;/code&gt; if the validation fails. In this case, the
+&nbsp;     * &lt;code&gt;HtmlEmail&lt;/code&gt; object will not be changed.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;
+&nbsp;     * NOTE: Clients should take care to ensure that different URLs are bound to
+&nbsp;     * different names. This implementation tries to detect this and throw
+&nbsp;     * &lt;code&gt;EmailException&lt;/code&gt;. However, it is not guaranteed to catch
+&nbsp;     * all cases, especially when the URL refers to a remote HTTP host that
+&nbsp;     * may be part of a virtual host cluster.
+&nbsp;     *
+&nbsp;     * @param url The URL of the file.
+&nbsp;     * @param name The name that will be set in the filename header
+&nbsp;     * field.
+&nbsp;     * @return A String with the Content-ID of the file.
+&nbsp;     * @throws EmailException when URL supplied is invalid or if {@code name} is null
+&nbsp;     * or empty; also see {@link javax.mail.internet.MimeBodyPart} for definitions
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    public String embed(URL url, String name) throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(name))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;name cannot be null or empty&quot;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // check if a URLDataSource for this name has already been attached;
+&nbsp;        // if so, return the cached CID value.
+<b class="nc">&nbsp;        if (inlineEmbeds.containsKey(name))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            InlineImage ii = inlineEmbeds.get(name);</b>
+<b class="nc">&nbsp;            URLDataSource urlDataSource = (URLDataSource) ii.getDataSource();</b>
+&nbsp;            // make sure the supplied URL points to the same thing
+&nbsp;            // as the one already associated with this name.
+&nbsp;            // NOTE: Comparing URLs with URL.equals() is a blocking operation
+&nbsp;            // in the case of a network failure therefore we use
+&nbsp;            // url.toExternalForm().equals() here.
+<b class="nc">&nbsp;            if (url.toExternalForm().equals(urlDataSource.getURL().toExternalForm()))</b>
+&nbsp;            {
+<b class="nc">&nbsp;                return ii.getCid();</b>
+&nbsp;            }
+&nbsp;            else
+&nbsp;            {
+<b class="nc">&nbsp;                throw new EmailException(&quot;embedded name &#39;&quot; + name</b>
+<b class="nc">&nbsp;                    + &quot;&#39; is already bound to URL &quot; + urlDataSource.getURL()</b>
+&nbsp;                    + &quot;; existing names cannot be rebound&quot;);
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // verify that the URL is valid
+<b class="nc">&nbsp;        InputStream is = null;</b>
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            is = url.openStream();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (IOException e)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;Invalid URL&quot;, e);</b>
+&nbsp;        }
+&nbsp;        finally
+&nbsp;        {
+<b class="nc">&nbsp;            try</b>
+&nbsp;            {
+<b class="nc">&nbsp;                if (is != null)</b>
+&nbsp;                {
+<b class="nc">&nbsp;                    is.close();</b>
+&nbsp;                }
+&nbsp;            }
+<b class="nc">&nbsp;            catch (IOException ioe) // NOPMD</b>
+<b class="nc">&nbsp;            { /* sigh */ }</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="nc">&nbsp;        return embed(new URLDataSource(url), name);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Embeds a file in the HTML. This implementation delegates to
+&nbsp;     * {@link #embed(File, String)}.
+&nbsp;     *
+&nbsp;     * @param file The &lt;code&gt;File&lt;/code&gt; object to embed
+&nbsp;     * @return A String with the Content-ID of the file.
+&nbsp;     * @throws EmailException when the supplied &lt;code&gt;File&lt;/code&gt; cannot be
+&nbsp;     * used; also see {@link javax.mail.internet.MimeBodyPart} for definitions
+&nbsp;     *
+&nbsp;     * @see #embed(File, String)
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public String embed(File file) throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        String cid = EmailUtils.randomAlphabetic(HtmlEmail.CID_LENGTH).toLowerCase(Locale.ENGLISH);</b>
+<b class="nc">&nbsp;        return embed(file, cid);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Embeds a file in the HTML.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;This method embeds a file located by an URL into
+&nbsp;     * the mail body. It allows, for instance, to add inline images
+&nbsp;     * to the email.  Inline files may be referenced with a
+&nbsp;     * &lt;code&gt;cid:xxxxxx&lt;/code&gt; URL, where xxxxxx is the Content-ID
+&nbsp;     * returned by the embed function. Files are bound to their names, which is
+&nbsp;     * the value returned by {@link java.io.File#getName()}. If the same file
+&nbsp;     * is embedded multiple times, the same CID is guaranteed to be returned.
+&nbsp;     *
+&nbsp;     * &lt;p&gt;While functionally the same as passing &lt;code&gt;FileDataSource&lt;/code&gt; to
+&nbsp;     * {@link #embed(DataSource, String, String)}, this method attempts
+&nbsp;     * to validate the file before embedding it in the message and will throw
+&nbsp;     * &lt;code&gt;EmailException&lt;/code&gt; if the validation fails. In this case, the
+&nbsp;     * &lt;code&gt;HtmlEmail&lt;/code&gt; object will not be changed.
+&nbsp;     *
+&nbsp;     * @param file The &lt;code&gt;File&lt;/code&gt; to embed
+&nbsp;     * @param cid the Content-ID to use for the embedded &lt;code&gt;File&lt;/code&gt;
+&nbsp;     * @return A String with the Content-ID of the file.
+&nbsp;     * @throws EmailException when the supplied &lt;code&gt;File&lt;/code&gt; cannot be used
+&nbsp;     *  or if the file has already been embedded;
+&nbsp;     *  also see {@link javax.mail.internet.MimeBodyPart} for definitions
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public String embed(File file, String cid) throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(file.getName()))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;file name cannot be null or empty&quot;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // verify that the File can provide a canonical path
+<b class="nc">&nbsp;        String filePath = null;</b>
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            filePath = file.getCanonicalPath();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (IOException ioe)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;couldn&#39;t get canonical path for &quot;</b>
+<b class="nc">&nbsp;                    + file.getName(), ioe);</b>
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        // check if a FileDataSource for this name has already been attached;
+&nbsp;        // if so, return the cached CID value.
+<b class="nc">&nbsp;        if (inlineEmbeds.containsKey(file.getName()))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            InlineImage ii = inlineEmbeds.get(file.getName());</b>
+<b class="nc">&nbsp;            FileDataSource fileDataSource = (FileDataSource) ii.getDataSource();</b>
+&nbsp;            // make sure the supplied file has the same canonical path
+&nbsp;            // as the one already associated with this name.
+<b class="nc">&nbsp;            String existingFilePath = null;</b>
+&nbsp;            try
+&nbsp;            {
+<b class="nc">&nbsp;                existingFilePath = fileDataSource.getFile().getCanonicalPath();</b>
+&nbsp;            }
+<b class="nc">&nbsp;            catch (IOException ioe)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                throw new EmailException(&quot;couldn&#39;t get canonical path for file &quot;</b>
+<b class="nc">&nbsp;                        + fileDataSource.getFile().getName()</b>
+&nbsp;                        + &quot;which has already been embedded&quot;, ioe);
+<b class="nc">&nbsp;            }</b>
+<b class="nc">&nbsp;            if (filePath.equals(existingFilePath))</b>
+&nbsp;            {
+<b class="nc">&nbsp;                return ii.getCid();</b>
+&nbsp;            }
+&nbsp;            else
+&nbsp;            {
+<b class="nc">&nbsp;                throw new EmailException(&quot;embedded name &#39;&quot; + file.getName()</b>
+&nbsp;                    + &quot;&#39; is already bound to file &quot; + existingFilePath
+&nbsp;                    + &quot;; existing names cannot be rebound&quot;);
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // verify that the file is valid
+<b class="nc">&nbsp;        if (!file.exists())</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;file &quot; + filePath + &quot; doesn&#39;t exist&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (!file.isFile())</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;file &quot; + filePath + &quot; isn&#39;t a normal file&quot;);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (!file.canRead())</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;file &quot; + filePath + &quot; isn&#39;t readable&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return embed(new FileDataSource(file), file.getName(), cid);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Embeds the specified &lt;code&gt;DataSource&lt;/code&gt; in the HTML using a
+&nbsp;     * randomly generated Content-ID. Returns the generated Content-ID string.
+&nbsp;     *
+&nbsp;     * @param dataSource the &lt;code&gt;DataSource&lt;/code&gt; to embed
+&nbsp;     * @param name the name that will be set in the filename header field
+&nbsp;     * @return the generated Content-ID for this &lt;code&gt;DataSource&lt;/code&gt;
+&nbsp;     * @throws EmailException if the embedding fails or if &lt;code&gt;name&lt;/code&gt; is
+&nbsp;     * null or empty
+&nbsp;     * @see #embed(DataSource, String, String)
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public String embed(DataSource dataSource, String name) throws EmailException
+&nbsp;    {
+&nbsp;        // check if the DataSource has already been attached;
+&nbsp;        // if so, return the cached CID value.
+<b class="nc">&nbsp;        if (inlineEmbeds.containsKey(name))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            InlineImage ii = inlineEmbeds.get(name);</b>
+&nbsp;            // make sure the supplied URL points to the same thing
+&nbsp;            // as the one already associated with this name.
+<b class="nc">&nbsp;            if (dataSource.equals(ii.getDataSource()))</b>
+&nbsp;            {
+<b class="nc">&nbsp;                return ii.getCid();</b>
+&nbsp;            }
+&nbsp;            else
+&nbsp;            {
+<b class="nc">&nbsp;                throw new EmailException(&quot;embedded DataSource &#39;&quot; + name</b>
+<b class="nc">&nbsp;                    + &quot;&#39; is already bound to name &quot; + ii.getDataSource().toString()</b>
+&nbsp;                    + &quot;; existing names cannot be rebound&quot;);
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        String cid = EmailUtils.randomAlphabetic(HtmlEmail.CID_LENGTH).toLowerCase();</b>
+<b class="nc">&nbsp;        return embed(dataSource, name, cid);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Embeds the specified &lt;code&gt;DataSource&lt;/code&gt; in the HTML using the
+&nbsp;     * specified Content-ID. Returns the specified Content-ID string.
+&nbsp;     *
+&nbsp;     * @param dataSource the &lt;code&gt;DataSource&lt;/code&gt; to embed
+&nbsp;     * @param name the name that will be set in the filename header field
+&nbsp;     * @param cid the Content-ID to use for this &lt;code&gt;DataSource&lt;/code&gt;
+&nbsp;     * @return the URL encoded Content-ID for this &lt;code&gt;DataSource&lt;/code&gt;
+&nbsp;     * @throws EmailException if the embedding fails or if &lt;code&gt;name&lt;/code&gt; is
+&nbsp;     * null or empty
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    public String embed(DataSource dataSource, String name, String cid)
+&nbsp;        throws EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        if (EmailUtils.isEmpty(name))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(&quot;name cannot be null or empty&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        MimeBodyPart mbp = new MimeBodyPart();</b>
+&nbsp;
+&nbsp;        try
+&nbsp;        {
+&nbsp;            // url encode the cid according to rfc 2392
+<b class="nc">&nbsp;            cid = EmailUtils.encodeUrl(cid);</b>
+&nbsp;
+<b class="nc">&nbsp;            mbp.setDataHandler(new DataHandler(dataSource));</b>
+<b class="nc">&nbsp;            mbp.setFileName(name);</b>
+<b class="nc">&nbsp;            mbp.setDisposition(EmailAttachment.INLINE);</b>
+<b class="nc">&nbsp;            mbp.setContentID(&quot;&lt;&quot; + cid + &quot;&gt;&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;            InlineImage ii = new InlineImage(cid, dataSource, mbp);</b>
+<b class="nc">&nbsp;            this.inlineEmbeds.put(name, ii);</b>
+&nbsp;
+<b class="nc">&nbsp;            return cid;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (UnsupportedEncodingException uee)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(uee);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Does the work of actually building the MimeMessage. Please note that
+&nbsp;     * a user rarely calls this method directly and only if he/she is
+&nbsp;     * interested in the sending the underlying MimeMessage without
+&nbsp;     * commons-email.
+&nbsp;     *
+&nbsp;     * @exception EmailException if there was an error.
+&nbsp;     * @since 1.0
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void buildMimeMessage() throws EmailException
+&nbsp;    {
+&nbsp;        try
+&nbsp;        {
+<b class="nc">&nbsp;            build();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        catch (MessagingException me)</b>
+&nbsp;        {
+<b class="nc">&nbsp;            throw new EmailException(me);</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        super.buildMimeMessage();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @throws EmailException EmailException
+&nbsp;     * @throws MessagingException MessagingException
+&nbsp;     */
+&nbsp;    private void build() throws MessagingException, EmailException
+&nbsp;    {
+<b class="nc">&nbsp;        MimeMultipart rootContainer = this.getContainer();</b>
+<b class="nc">&nbsp;        MimeMultipart bodyEmbedsContainer = rootContainer;</b>
+<b class="nc">&nbsp;        MimeMultipart bodyContainer = rootContainer;</b>
+<b class="nc">&nbsp;        MimeBodyPart msgHtml = null;</b>
+<b class="nc">&nbsp;        MimeBodyPart msgText = null;</b>
+&nbsp;
+<b class="nc">&nbsp;        rootContainer.setSubType(&quot;mixed&quot;);</b>
+&nbsp;
+&nbsp;        // determine how to form multiparts of email
+&nbsp;
+<b class="nc">&nbsp;        if (EmailUtils.isNotEmpty(this.html) &amp;&amp; this.inlineEmbeds.size() &gt; 0)</b>
+&nbsp;        {
+&nbsp;            //If HTML body and embeds are used, create a related container and add it to the root container
+<b class="nc">&nbsp;            bodyEmbedsContainer = new MimeMultipart(&quot;related&quot;);</b>
+<b class="nc">&nbsp;            bodyContainer = bodyEmbedsContainer;</b>
+<b class="nc">&nbsp;            this.addPart(bodyEmbedsContainer, 0);</b>
+&nbsp;
+&nbsp;            //If TEXT body was specified, create a alternative container and add it to the embeds container
+<b class="nc">&nbsp;            if (EmailUtils.isNotEmpty(this.text))</b>
+&nbsp;            {
+<b class="nc">&nbsp;                bodyContainer = new MimeMultipart(&quot;alternative&quot;);</b>
+<b class="nc">&nbsp;                BodyPart bodyPart = createBodyPart();</b>
+&nbsp;                try
+&nbsp;                {
+<b class="nc">&nbsp;                    bodyPart.setContent(bodyContainer);</b>
+<b class="nc">&nbsp;                    bodyEmbedsContainer.addBodyPart(bodyPart, 0);</b>
+&nbsp;                }
+<b class="nc">&nbsp;                catch (MessagingException me)</b>
+&nbsp;                {
+<b class="nc">&nbsp;                    throw new EmailException(me);</b>
+<b class="nc">&nbsp;                }</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+<b class="nc">&nbsp;        else if (EmailUtils.isNotEmpty(this.text) &amp;&amp; EmailUtils.isNotEmpty(this.html))</b>
+&nbsp;        {
+&nbsp;            //If both HTML and TEXT bodies are provided, create a alternative container and add it to the root container
+<b class="nc">&nbsp;            bodyContainer = new MimeMultipart(&quot;alternative&quot;);</b>
+<b class="nc">&nbsp;            this.addPart(bodyContainer, 0);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (EmailUtils.isNotEmpty(this.html))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            msgHtml = new MimeBodyPart();</b>
+<b class="nc">&nbsp;            bodyContainer.addBodyPart(msgHtml, 0);</b>
+&nbsp;
+&nbsp;            // EMAIL-104: call explicitly setText to use default mime charset
+&nbsp;            //            (property &quot;mail.mime.charset&quot;) in case none has been set
+<b class="nc">&nbsp;            msgHtml.setText(this.html, this.charset, EmailConstants.TEXT_SUBTYPE_HTML);</b>
+&nbsp;
+<b class="nc">&nbsp;            for (InlineImage image : this.inlineEmbeds.values())</b>
+&nbsp;            {
+<b class="nc">&nbsp;                bodyEmbedsContainer.addBodyPart(image.getMbp());</b>
+<b class="nc">&nbsp;            }</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (EmailUtils.isNotEmpty(this.text))</b>
+&nbsp;        {
+<b class="nc">&nbsp;            msgText = new MimeBodyPart();</b>
+<b class="nc">&nbsp;            bodyContainer.addBodyPart(msgText, 0);</b>
+&nbsp;
+&nbsp;            // EMAIL-104: call explicitly setText to use default mime charset
+&nbsp;            //            (property &quot;mail.mime.charset&quot;) in case none has been set
+<b class="nc">&nbsp;            msgText.setText(this.text, this.charset);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Private bean class that encapsulates data about URL contents
+&nbsp;     * that are embedded in the final email.
+&nbsp;     * @since 1.1
+&nbsp;     */
+&nbsp;    private static class InlineImage
+&nbsp;    {
+&nbsp;        /** content id. */
+&nbsp;        private String cid;
+&nbsp;        /** &lt;code&gt;DataSource&lt;/code&gt; for the content. */
+&nbsp;        private DataSource dataSource;
+&nbsp;        /** the &lt;code&gt;MimeBodyPart&lt;/code&gt; that contains the encoded data. */
+&nbsp;        private MimeBodyPart mbp;
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Creates an InlineImage object to represent the
+&nbsp;         * specified content ID and &lt;code&gt;MimeBodyPart&lt;/code&gt;.
+&nbsp;         * @param cid the generated content ID
+&nbsp;         * @param dataSource the &lt;code&gt;DataSource&lt;/code&gt; that represents the content
+&nbsp;         * @param mbp the &lt;code&gt;MimeBodyPart&lt;/code&gt; that contains the encoded
+&nbsp;         * data
+&nbsp;         */
+&nbsp;        public InlineImage(String cid, DataSource dataSource, MimeBodyPart mbp)
+<b class="nc">&nbsp;        {</b>
+<b class="nc">&nbsp;            this.cid = cid;</b>
+<b class="nc">&nbsp;            this.dataSource = dataSource;</b>
+<b class="nc">&nbsp;            this.mbp = mbp;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Returns the unique content ID of this InlineImage.
+&nbsp;         * @return the unique content ID of this InlineImage
+&nbsp;         */
+&nbsp;        public String getCid()
+&nbsp;        {
+<b class="nc">&nbsp;            return cid;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Returns the &lt;code&gt;DataSource&lt;/code&gt; that represents the encoded content.
+&nbsp;         * @return the &lt;code&gt;DataSource&lt;/code&gt; representing the encoded content
+&nbsp;         */
+&nbsp;        public DataSource getDataSource()
+&nbsp;        {
+<b class="nc">&nbsp;            return dataSource;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * Returns the &lt;code&gt;MimeBodyPart&lt;/code&gt; that contains the
+&nbsp;         * encoded InlineImage data.
+&nbsp;         * @return the &lt;code&gt;MimeBodyPart&lt;/code&gt; containing the encoded
+&nbsp;         * InlineImage data
+&nbsp;         */
+&nbsp;        public MimeBodyPart getMbp()
+&nbsp;        {
+<b class="nc">&nbsp;            return mbp;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // equals()/hashCode() implementations, since this class
+&nbsp;        // is stored as a entry in a Map.
+&nbsp;        /**
+&nbsp;         * {@inheritDoc}
+&nbsp;         * @return true if the other object is also an InlineImage with the same cid.
+&nbsp;         */
+&nbsp;        @Override
+&nbsp;        public boolean equals(Object obj)
+&nbsp;        {
+<b class="nc">&nbsp;            if (this == obj)</b>
+&nbsp;            {
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (!(obj instanceof InlineImage))</b>
+&nbsp;            {
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            InlineImage that = (InlineImage) obj;</b>
+&nbsp;
+<b class="nc">&nbsp;            return this.cid.equals(that.cid);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        /**
+&nbsp;         * {@inheritDoc}
+&nbsp;         * @return the cid hashCode.
+&nbsp;         */
+&nbsp;        @Override
+&nbsp;        public int hashCode()
+&nbsp;        {
+<b class="nc">&nbsp;            return cid.hashCode();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-03-16 18:32</div>
+</div>
+</body>
+</html>
